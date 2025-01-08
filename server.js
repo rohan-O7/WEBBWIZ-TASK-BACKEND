@@ -24,35 +24,36 @@ app.use(cors())
 app.get("/", async (req, res) => {
   const db = client.db(dbName);   
   const collection = db.collection("documents");
-  const findResult = await collection.find({}).toArray();
+  const findResult = await collection.find().toArray();
   res.json(findResult);
 });
 
 // Save a todo
-app.post("/", async (req, res) => {
+app.post("/add", async (req, res) => {
   const todo=req.body;
   const db = client.db(dbName);   
   const collection = db.collection("documents");
-  const findResult = await collection.insertOne(todo)
-  res.send({success: true,result:findResult})
+  const addResult = await collection.insertOne(todo)
+  res.send({success: true,result:addResult})
 });
 
 // Delete a todo
-app.delete("/", async (req, res) => {
+app.delete("/delete", async (req, res) => {
     const todo=req.body;
     const db = client.db(dbName);    
     const collection = db.collection("documents");
-    const findResult = await collection.deleteOne({id:todo.id});
-    res.send({success: true,result:findResult});
+    const deleteResult = await collection.deleteOne({id:todo.id});
+    res.send({success: true,result:deleteResult});
   });
 
 // Update a todo
-app.put("/", async (req, res) => {
+app.put("/edit", async (req, res) => {
   const todo=req.body;
-  const db = client.db(dbName);    
+  console.log(todo);
+  const db = client.db(dbName);
   const collection = db.collection("documents");
-  const findResult = await collection.updateOne({ id: todo.id }, { $set: {todo:todo.todo.todo,isCompleted:todo.isCompleted} });
-  res.send({success: true,result:findResult})
+  const editResult = await collection.updateOne({ id: todo.id }, { $set: {todo:todo.todo} });
+  res.send({success: true,result:editResult})
 });
 
 app.listen(port, () => {
